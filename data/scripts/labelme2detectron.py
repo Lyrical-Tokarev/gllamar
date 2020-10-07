@@ -19,8 +19,8 @@ def read_labelme_annotation(path):
     with open(path) as f:
         data = json.load(f)
     assert data['version']=='4.5.6'
-    #image_path = os.path.join(os.path.dirname(path), data['imagePath'])
-    image_path = data['imagePath']
+    image_path = os.path.join(os.path.dirname(path), data['imagePath'])
+    #image_path = data['imagePath']
     height = data['imageHeight']
     width = data['imageWidth']
     shapes = data['shapes']
@@ -60,15 +60,19 @@ def process_shapes(df, image_path, shapes, height, width, masks_dir):
                     #'image_id': str(image_id),
                     'bbox': [x, y, u, v],
                     'bbox_mode': BoxMode.XYXY_ABS, #<BoxMode.XYXY_ABS: 0>,
-                    'segmentation': [
-                        [
-                            p+q for xs in contour for p, q in zip(xs[::-1], (x, y))
-                        ]
-                        for contour in contours
-                    ],
+                    'segmentation': [],
                     'category_id': 0,
                     'mask_path': mask_path
                 }
+                for contour in contours:
+                    points = [
+                        p+q for xs in contour for p, q in zip(xs[::-1], (x, y))
+                    ]
+                    if len(points) < 6:
+                        continue
+                    assert len(points) % 2 == 0
+                    assert len(points) >= 6, f"{points}"
+                    data['segmentation'].append(points)
                 yield data
 
             else:
