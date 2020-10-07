@@ -13,7 +13,7 @@ import os
 from tqdm import tqdm
 from skimage.measure import find_contours, approximate_polygon
 from detectron2.structures import BoxMode
-
+import numpy as np
 
 def read_labelme_annotation(path):
     with open(path) as f:
@@ -40,18 +40,28 @@ def process_shapes(df, image_path, shapes, height, width, masks_dir):
             a, u = u, a
         if b > v:
             b, v = v, b
-
         mask_rectangles[i] = ((a, b), (u, v))
+
     if not (df.ImageID == image_id).any():
         return
     for mask_path, dataset_name in df.loc[df.ImageID == image_id, ["MaskPath", "dataset"]].values:
-        segmentation_mask = cv2.imread(os.path.join(masks_dir, mask_path), 0)
+        segmentation_mask = cv2.imread(os.path.join(masks_dir, mask_path), 0)/255.0
         if segmentation_mask.shape != (height, width):
-            segmentation_mask = cv2.resize(segmentation_mask, (width, height)) > 0
+            segmentation_mask = cv2.resize(segmentation_mask, (width, height))
 
         for i, ((x,y), (u, v)) in mask_rectangles.items():
             mask = segmentation_mask[y: v, x:u]
-            contours = find_contours(mask, 0.5)
+            #segmentation_mask[:y] = 0
+            #segmentation_mask[v:] = 0
+            #segmentation_mask[:, :x] = 0
+            #segmentation_mask[:, u:] = 0
+
+            #print(np.unique(mask))
+            mask = np.pad(mask, 1, mode='constant')
+            lbls = np.unique(mask)
+            if len(lbls) == 1 and lbls[0] ==0:
+                continue
+            contours = find_contours(mask > 0, 0.5)
             #contours = [
             #    approximate_polygon(contour, 2.5)
             #    for contour in contours]
@@ -66,7 +76,8 @@ def process_shapes(df, image_path, shapes, height, width, masks_dir):
                 }
                 for contour in contours:
                     points = [
-                        p+q for xs in contour for p, q in zip(xs[::-1], (x, y))
+                        min(max(p+q - 1, q), r) for xs in contour
+                        for p, q, r in zip(xs[::-1], (x, y), (u, v))
                     ]
                     if len(points) < 6:
                         continue
