@@ -26,4 +26,20 @@ During the hackathon, which is held at October, 2 - October, 10, 2020 we plan to
 
 ## Tools of trade we use
 
+# Data: collection and preprocessing
+
+We use OpenImages dataset, since it provides annotations (both segmentation and bounding boxes) for the class named 'Alpaca'.
+Since annotations describe the whole animal bodies, and we've decided to use only animal faces, we've also used labelme to select bounding boxes for faces by hand.
+
+For now we have 432 images with alpaca, llama or guanaco.
+
+## Next steps and/or ideas:
+
+- [x] add "labelme to detectron2" format converter
+- [ ] add script for detectron2 training with this preprocessed dataset and use it to make alpaca-detector
+- [ ] ? add more images to our dataset from flickr and to extract animal faces with detectron2 trained with OpenImages-based Alpaca subset.
+- [ ] validate collected and automatically annotated data
+- [ ] add script to convert labelme or detectron2 annotations to smaller size,
+and crop images to animal faces only
+
 ## Our Team
