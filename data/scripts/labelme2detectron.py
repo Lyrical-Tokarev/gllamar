@@ -52,9 +52,9 @@ def process_shapes(df, image_path, shapes, height, width, masks_dir):
         for i, ((x,y), (u, v)) in mask_rectangles.items():
             mask = segmentation_mask[y: v, x:u]
             contours = find_contours(mask, 0.5)
-            contours = [
-                approximate_polygon(contour, 2.5)
-                for contour in contours]
+            #contours = [
+            #    approximate_polygon(contour, 2.5)
+            #    for contour in contours]
             if len(contours) > 0:
                 data = {
                     #'image_id': str(image_id),
