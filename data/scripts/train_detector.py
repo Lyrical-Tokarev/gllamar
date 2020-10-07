@@ -13,7 +13,16 @@ from detectron2 import model_zoo
 from detectron2.engine import DefaultPredictor
 from detectron2.config import get_cfg
 from detectron2.utils.visualizer import Visualizer
-from detectron2.data import MetadataCatalog, DatasetCatalog
+from detectron2.data import MetadataCatalog, DatasetCatalog, build_detection_train_loader
+
+from dummy_albu_mapper import DummyAlbuMapper
+
+
+class Trainer(DefaultTrainer):
+    @classmethod
+    def build_train_loader(cls, cfg):
+        mapper = DummyAlbuMapper(cfg, is_train=True)
+        return build_detection_train_loader(cfg, mapper=mapper)
 
 
 def get_data(json_path, subset="train"):
@@ -40,6 +49,7 @@ def train(json_path):
     cfg.SOLVER.MAX_ITER = 300    # 300 iterations seems good enough for this toy dataset; you will need to train longer for a practical dataset
     cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE = 64   # faster, and good enough for this toy dataset (default: 512)
     cfg.MODEL.ROI_HEADS.NUM_CLASSES = 1  # only has one class (ballon). (see https://detectron2.readthedocs.io/tutorials/datasets.html#update-the-config-for-new-datasets)
+    cfg.INPUT.ALBUMENTATIONS = './scripts/sample-detectron-albu-config.json'
 
     os.makedirs(cfg.OUTPUT_DIR, exist_ok=True)
     trainer = DefaultTrainer(cfg)

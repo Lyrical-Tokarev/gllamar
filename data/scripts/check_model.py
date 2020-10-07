@@ -93,7 +93,7 @@ def load_and_run(model_name, json_path, masks_dir):
     st.text(len(dataset_dicts))
     metadata = MetadataCatalog.get("alpaca_train")
     for d in dataset_dicts:
-        fig, (ax0, ax1, ax2) = plt.subplots(ncols=3)
+        fig, (ax0, ax1, ax2) = plt.subplots(nrows=3, figsize=(5,5))
         path = d["file_name"]
         #print(list(d['annotations'][0]))
         #path = os.path.join("..", file_name)
@@ -116,10 +116,14 @@ def load_and_run(model_name, json_path, masks_dir):
         out = v2.draw_dataset_dict(d)
         ax1.imshow(out.get_image()[:, :, ::-1])
         ax1.set_title("GT prediction")
+
         mask = get_mask_from_annotations(d, masks_dir=masks_dir)
         ax2.imshow(mask)
         ax2.set_title("mask from file")
         plt.suptitle(f"{path}")
+        for ax in [ax0, ax1, ax2]:
+            ax.xaxis.set_ticklabels([])
+            ax.yaxis.set_ticklabels([])
         st.pyplot(fig)
 
 if __name__ == "__main__":
