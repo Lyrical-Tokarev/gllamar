@@ -27,20 +27,40 @@ def read_labelme_annotation(path):
 
     return image_path, height, width, shapes
 
+def make_square(bbox, height, width):
+    """Extends bounding box to square if possible and returns new shape
+    """
+    (x, y), (u, v) = bbox
+    if x > u:
+        x, u = u, x
+    if y > v:
+        y, v = v, y
+    dx = u - x
+    dy = v - y
+    if dx == dy:
+        return (x, y), (u, v)
+    size = max(dx, dy)
+    #print(dx, dy)
+    pad = int(np.abs(dx - dy) / 2)
+    #print(pad)
+    if size == dx:
+        # extend dy
+        y = max(y - pad, 0)
+        v = min(y + size, height - 1)
+    else:
+        # extend dx
+        x = max(x - pad, 0)
+        u = min(x + size, width - 1)
+    return (x, y), (u, v)
+
 
 def process_shapes(df, image_path, shapes, height, width, masks_dir):
     image_id, _ = os.path.basename(image_path).split("_")
 
     mask_rectangles = dict()
     for i, shape in enumerate(shapes):
-        start, end = shape['points']
-        a, b = [int(x) for x in start]
-        u, v = [int(x) for x in end]
-        if a > u:
-            a, u = u, a
-        if b > v:
-            b, v = v, b
-        mask_rectangles[i] = ((a, b), (u, v))
+        #start, end = shape['points']
+        mask_rectangles[i] = make_square([ [int(x) for x in xs] for xs in shape['points']], height, width)
 
     if not (df.ImageID == image_id).any():
         return
