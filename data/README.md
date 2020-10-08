@@ -35,3 +35,9 @@ This step is not necessary, although we think that it might be useful for extend
   ```
   streamlit run scripts/check_model.py -- --model_name output/model_final.pth --json_path annotations/test.json
   ```
+
+  3. Convert annotation data and images from 2.1 to square images.
+  ```
+  python scripts/detectron2cyclegan.py annotations/train.json
+  ```
+  

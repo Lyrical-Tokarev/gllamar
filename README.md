@@ -19,12 +19,17 @@ During the hackathon, which is held at October, 2 - October, 10, 2020 we plan to
 
 ## Project limitations
 
-- we might find not enough alpacas to achieve good results
-- two my project members have to work, I have a vacation this week, which I (as usual) spend at home
+- we might find not enough alpacas to achieve good results. For now we have only 432 images with camelids faces.
 - tonz of other exciting projects with upcoming deadlines (like [this one](https://www.kaggle.com/c/stanford-covid-vaccine)) elsewhere, which are hard to resist, especially when you have 1-week long vacation and admire puzzles
 - both of my teammates have no vacations now and have to do their work.
 
 ## Tools of trade we use
+
+- pytorch
+- detectron2
+- CycleGAN
+
+- streamlit for visual debug and screencasts
 
 # Data: collection and preprocessing
 
