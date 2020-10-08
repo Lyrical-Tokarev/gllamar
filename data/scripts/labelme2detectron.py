@@ -65,38 +65,38 @@ def process_shapes(df, image_path, shapes, height, width, masks_dir):
                 continue
             mask_data[i].append((mask.sum(), mask > 0))
 
-        for i, ((x,y), (u, v)) in mask_rectangles.items():
-            if len(mask_data[i]) == 0:
-                continue
-            k = np.argmax([x[0] for x in mask_data[i]])
-            mask = mask_data[i][k][1]
-            contours = find_contours(mask, 0.5)
-            #contours = [
-            #    approximate_polygon(contour, 2.5)
-            #    for contour in contours]
-            if len(contours) > 0:
-                data = {
-                    #'image_id': str(image_id),
-                    'bbox': [x, y, u, v],
-                    'bbox_mode': BoxMode.XYXY_ABS, #<BoxMode.XYXY_ABS: 0>,
-                    'segmentation': [],
-                    'category_id': 0,
-                    'mask_path': mask_path
-                }
-                for contour in contours:
-                    points = [
-                        min(max(p+q - 1, q), r) for xs in contour
-                        for p, q, r in zip(xs[::-1], (x, y), (u, v))
-                    ]
-                    if len(points) < 6:
-                        continue
-                    assert len(points) % 2 == 0
-                    assert len(points) >= 6, f"{points}"
-                    data['segmentation'].append(points)
-                yield data
+    for i, ((x,y), (u, v)) in mask_rectangles.items():
+        if len(mask_data[i]) == 0:
+            continue
+        k = np.argmax([x[0] for x in mask_data[i]])
+        mask = mask_data[i][k][1]
+        contours = find_contours(mask, 0.5)
+        #contours = [
+        #    approximate_polygon(contour, 2.5)
+        #    for contour in contours]
+        if len(contours) > 0:
+            data = {
+                #'image_id': str(image_id),
+                'bbox': [x, y, u, v],
+                'bbox_mode': BoxMode.XYXY_ABS, #<BoxMode.XYXY_ABS: 0>,
+                'segmentation': [],
+                'category_id': 0,
+                'mask_path': mask_path
+            }
+            for contour in contours:
+                points = [
+                    min(max(p+q - 1, q), r) for xs in contour
+                    for p, q, r in zip(xs[::-1], (x, y), (u, v))
+                ]
+                if len(points) < 6:
+                    continue
+                assert len(points) % 2 == 0
+                assert len(points) >= 6, f"{points}"
+                data['segmentation'].append(points)
+            yield data
 
-            else:
-                continue
+        else:
+            continue
 
 
 @click.command()
