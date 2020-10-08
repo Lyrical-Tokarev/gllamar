@@ -26,6 +26,8 @@ class Trainer(DefaultTrainer):
 
 
 def get_data(json_path, subset="train"):
+    if os.path.exists(json_path) and os.path.isdir(json_path):
+        json_path = os.path.join(json_path, f"{subset}.json")
     with open(json_path) as f:
         data = json.load(f)
     return data
