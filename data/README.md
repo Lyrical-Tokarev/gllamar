@@ -36,8 +36,16 @@ This step is not necessary, although we think that it might be useful for extend
   streamlit run scripts/check_model.py -- --model_name output/model_final.pth --json_path annotations/test.json
   ```
 
-  3. Convert annotation data and images from 2.1 to square images.
-  ```
-  python scripts/detectron2cyclegan.py annotations/train.json
-  ```
-  
+3. Convert annotation data and images from 2.1 to square images.
+```
+python scripts/detectron2cyclegan.py annotations/train.json
+```
+
+4. Extract and save images with human faces
+
+I've decided to try [this dataset](https://www.kaggle.com/dataturks/face-detection-in-images) from kaggle. Download as:
+```
+kaggle datasets download -d dataturks/face-detection-in-images -p face-detection-ds
+cd face-detection-ds
+unzip face-detection-in-images.zip
+```
