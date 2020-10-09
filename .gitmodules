@@ -1,1 +1,4 @@
 
+[submodule "dependencies/CUT"]
+	path = dependencies/CUT
+	url = https://github.com/taesungp/contrastive-unpaired-translation.git
