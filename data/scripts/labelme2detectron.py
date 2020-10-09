@@ -15,6 +15,8 @@ from skimage.measure import find_contours, approximate_polygon
 from detectron2.structures import BoxMode
 import numpy as np
 
+from common_tools import make_square
+
 def read_labelme_annotation(path):
     with open(path) as f:
         data = json.load(f)
@@ -26,32 +28,6 @@ def read_labelme_annotation(path):
     shapes = data['shapes']
 
     return image_path, height, width, shapes
-
-def make_square(bbox, height, width):
-    """Extends bounding box to square if possible and returns new shape
-    """
-    (x, y), (u, v) = bbox
-    if x > u:
-        x, u = u, x
-    if y > v:
-        y, v = v, y
-    dx = u - x
-    dy = v - y
-    if dx == dy:
-        return (x, y), (u, v)
-    size = max(dx, dy)
-    #print(dx, dy)
-    pad = int(np.abs(dx - dy) / 2)
-    #print(pad)
-    if size == dx:
-        # extend dy
-        y = max(y - pad, 0)
-        v = min(y + size, height - 1)
-    else:
-        # extend dx
-        x = max(x - pad, 0)
-        u = min(x + size, width - 1)
-    return (x, y), (u, v)
 
 
 def process_shapes(df, image_path, shapes, height, width, masks_dir):
