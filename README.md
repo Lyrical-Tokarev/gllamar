@@ -48,3 +48,7 @@ For now we have 432 images with alpaca, llama or guanaco.
 - [ ] add script to crop images to animal faces only based on detectron2 predictions
 
 ## Our Team
+
+- @latticetower (Tanya Malygina)
+- @nmslana (Svetlana Dolgacheva)
+- @ikwato (Anastasia Polevaya)
