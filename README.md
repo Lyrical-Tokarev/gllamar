@@ -17,7 +17,7 @@ During the hackathon, which is held at October, 2 - October, 10, 2020 we plan to
 - [x] collect alpaca | llama | other cutie photos
 - [x] annotate them (we'll need bounding boxes with animal faces, since image-to-image translation will work better in this case)
 - [ ] (this is done, but didn't went well) use magic of CycleGAN (most probably we'll use [this implementation](https://github.com/junyanz/CycleGAN))
-- [+] (trained stylegan, didn't blend yet) use StyleGAN2 to generate camelids, after that blend them with human faces!
+- [+] ([trained stylegan](https://www.dropbox.com/s/f40bkbfsagziqxs/network-snapshot-000060.pkl), didn't blend yet) use StyleGAN2 to generate camelids, after that blend them with human faces!
 - [?] (we have buggy bot, integration of cyclegan model is in process, stylegan model is not intergrated, and it might be very slow) box it: make Telegram bot, mobile application or just demo app with streamlit.
 
 ## Project limitations
